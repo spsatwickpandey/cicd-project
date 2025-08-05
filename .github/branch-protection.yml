@@ -1,0 +1,112 @@
+# Branch Protection Configuration
+# This file defines the branch protection rules for the main branch
+
+branches:
+  - name: main
+    protection:
+      # Require status checks to pass before merging
+      required_status_checks:
+        strict: true
+        contexts:
+          - "SonarCloud Analysis"
+          - "Quality Gate Status"
+          - "Lint and Format Check"
+          - "Unit Tests"
+          - "Security Audit"
+          - "Integration Tests"
+          - "Docker Build and Test"
+      
+      # Require branches to be up to date before merging
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        require_last_push_approval: true
+      
+      # Require conversation resolution before merging
+      required_conversation_resolution: true
+      
+      # Enforce signed commits (optional)
+      enforce_admins: false
+      allow_force_pushes: false
+      allow_deletions: false
+      
+      # Restrict pushes that create files that cannot be reviewed
+      allow_fork_syncing: true
+      
+      # Block creation of files that cannot be reviewed
+      block_creations: false
+      
+      # Require linear history
+      required_linear_history: false
+      
+      # Lock branch
+      lock_branch: false
+      
+      # Allow force pushes
+      allow_force_pushes: false
+      
+      # Allow deletions
+      allow_deletions: false
+
+  - name: develop
+    protection:
+      # Less strict rules for develop branch
+      required_status_checks:
+        strict: false
+        contexts:
+          - "SonarCloud Analysis"
+          - "Quality Gate Status"
+          - "Lint and Format Check"
+          - "Unit Tests"
+      
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        require_last_push_approval: false
+      
+      required_conversation_resolution: true
+      enforce_admins: false
+      allow_force_pushes: false
+      allow_deletions: false
+      allow_fork_syncing: true
+      block_creations: false
+      required_linear_history: false
+      lock_branch: false
+
+# Quality Gate Requirements
+quality_gates:
+  sonarcloud:
+    required: true
+    conditions:
+      - bugs: 0
+      - vulnerabilities: 0
+      - coverage: ">80"
+      - duplicated_lines_density: "<3"
+      - maintainability_rating: "A"
+      - reliability_rating: "A"
+      - security_rating: "A"
+      - security_hotspots_reviewed: ">80"
+
+# Status Check Requirements
+status_checks:
+  required:
+    - "SonarCloud Analysis"
+    - "Quality Gate Status"
+    - "Lint and Format Check"
+    - "Unit Tests"
+    - "Security Audit"
+  
+  optional:
+    - "Integration Tests"
+    - "Docker Build and Test"
+    - "Lighthouse Performance"
+
+# Pull Request Requirements
+pull_request_requirements:
+  - "Quality Gate must pass"
+  - "All required status checks must pass"
+  - "Code review required"
+  - "Conversation resolution required"
+  - "Branch must be up to date" 

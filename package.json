@@ -10,6 +10,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --coverage --ci --watchAll=false",
+    "test:sonar": "jest --coverage --ci --watchAll=false --reporter=jest-junit --outputDirectory=coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -25,6 +26,8 @@
     "lighthouse:collect": "lhci collect",
     "lighthouse:assert": "lhci assert",
     "lighthouse:upload": "lhci upload",
+    "sonar:analysis": "sonar-scanner",
+    "quality:check": "npm run test:sonar && npm run sonar:analysis",
     "prepare": "husky install"
   },
   "keywords": [

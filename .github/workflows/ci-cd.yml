@@ -187,12 +187,15 @@ jobs:
           path: cypress/videos/
           retention-days: 7
 
-  # SonarCloud Analysis
+  # SonarCloud Analysis with Comprehensive Quality Gates
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
     needs: [cache-dependencies, test]
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    outputs:
+      quality-gate-status: ${{ steps.sonarcloud.outputs.quality_gate_status }}
+      quality-gate-url: ${{ steps.sonarcloud.outputs.quality_gate_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -211,7 +214,14 @@ jobs:
       - name: Run tests for SonarCloud (with coverage)
         run: npm run test:coverage
         
+      - name: Generate test execution report
+        run: npm run test:ci -- --reporter=jest-junit --outputDirectory=coverage
+        env:
+          JEST_JUNIT_OUTPUT_DIR: coverage
+          JEST_JUNIT_OUTPUT_NAME: test-report.xml
+          
       - name: SonarCloud Scan
+        id: sonarcloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -219,12 +229,12 @@ jobs:
         with:
           args: >
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-            -Dsonar.organization=your-org_or_username
-            -Dsonar.projectKey=your-org_or_username_cicd-nodejs-api
+            -Dsonar.organization=spsatwickpandey
+            -Dsonar.projectKey=spsatwickpandey_cicd-project
             -Dsonar.qualitygate.wait=true
             -Dsonar.pullrequest.github.summary_comment=true
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.coverage.exclusions=**/*.test.js,**/*.spec.js,**/tests/**
+            -Dsonar.coverage.exclusions=**/*.test.js,**/*.spec.js,**/tests/**,**/node_modules/**
             -Dsonar.testExecutionReportPaths=coverage/test-report.xml
             -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.branch.target=${{ github.base_ref }}
@@ -234,9 +244,98 @@ jobs:
             -Dsonar.pullrequest.provider=GitHub
             -Dsonar.pullrequest.github.repository=${{ github.repository }}
             -Dsonar.pullrequest.github.summary_comment=true
+            -Dsonar.qualitygate.conditions=bugs=0;vulnerabilities=0;coverage>80;duplicated_lines_density<3;maintainability_rating=A;reliability_rating=A;security_rating=A;security_hotspots_reviewed>80
+            
+      - name: Comment PR with SonarCloud Results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const sonarComment = comments.find(comment => 
+              comment.body.includes('SonarCloud Quality Gate')
+            );
+            
+            if (sonarComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: sonarComment.id,
+                body: `## 🔍 SonarCloud Quality Gate Analysis\n\n**Status:** ${{ steps.sonarcloud.outputs.quality_gate_status }}\n\n**Details:**\n- 🐛 **Bugs:** 0 (Required)\n- 🔒 **Vulnerabilities:** 0 (Required)\n- 📊 **Code Coverage:** >80% (Required)\n- 📝 **Duplicated Lines:** <3% (Required)\n- 🏗️ **Maintainability Rating:** A (Required)\n- 🛡️ **Reliability Rating:** A (Required)\n- 🔐 **Security Rating:** A (Required)\n- 🔍 **Security Hotspots Reviewed:** >80% (Required)\n\n**View full report:** ${{ steps.sonarcloud.outputs.quality_gate_url }}`
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 🔍 SonarCloud Quality Gate Analysis\n\n**Status:** ${{ steps.sonarcloud.outputs.quality_gate_status }}\n\n**Details:**\n- 🐛 **Bugs:** 0 (Required)\n- 🔒 **Vulnerabilities:** 0 (Required)\n- 📊 **Code Coverage:** >80% (Required)\n- 📝 **Duplicated Lines:** <3% (Required)\n- 🏗️ **Maintainability Rating:** A (Required)\n- 🛡️ **Reliability Rating:** A (Required)\n- 🔐 **Security Rating:** A (Required)\n- 🔍 **Security Hotspots Reviewed:** >80% (Required)\n\n**View full report:** ${{ steps.sonarcloud.outputs.quality_gate_url }}`
+              });
+            }
+            
       - name: Upload SonarCloud Quality Gate Status
         if: always()
-        run: echo "SonarCloud Quality Gate status: ${{ steps.sonarcloud.outputs.quality_gate_status }}"
+        run: |
+          echo "SonarCloud Quality Gate status: ${{ steps.sonarcloud.outputs.quality_gate_status }}"
+          echo "SonarCloud Quality Gate URL: ${{ steps.sonarcloud.outputs.quality_gate_url }}"
+          
+      - name: Fail if Quality Gate fails
+        if: steps.sonarcloud.outputs.quality_gate_status == 'FAILED'
+        run: |
+          echo "❌ SonarCloud Quality Gate FAILED"
+          echo "Please fix the quality issues before merging"
+          exit 1
+
+  # Historical Quality Metrics Tracking
+  quality-metrics:
+    name: Quality Metrics Tracking
+    runs-on: ubuntu-latest
+    needs: [sonarcloud]
+    if: github.ref == 'refs/heads/main' && always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Generate quality metrics report
+        run: |
+          echo "📊 Quality Metrics Report" > quality-report.md
+          echo "Generated: $(date)" >> quality-report.md
+          echo "" >> quality-report.md
+          echo "## SonarCloud Quality Gate Status" >> quality-report.md
+          echo "- Status: ${{ needs.sonarcloud.outputs.quality-gate-status }}" >> quality-report.md
+          echo "- URL: ${{ needs.sonarcloud.outputs.quality-gate-url }}" >> quality-report.md
+          echo "" >> quality-report.md
+          echo "## Code Coverage" >> quality-report.md
+          echo "- Target: >80%" >> quality-report.md
+          echo "- Current: $(cat coverage/lcov.info | grep -E '^LF:' | cut -d: -f2 | awk '{sum+=$1} END {print sum}' || echo 'N/A')" >> quality-report.md
+          echo "" >> quality-report.md
+          echo "## Quality Standards" >> quality-report.md
+          echo "- 🐛 Bugs: 0 (Required)" >> quality-report.md
+          echo "- 🔒 Vulnerabilities: 0 (Required)" >> quality-report.md
+          echo "- 📝 Duplicated Lines: <3% (Required)" >> quality-report.md
+          echo "- 🏗️ Maintainability Rating: A (Required)" >> quality-report.md
+          echo "- 🛡️ Reliability Rating: A (Required)" >> quality-report.md
+          echo "- 🔐 Security Rating: A (Required)" >> quality-report.md
+          
+      - name: Upload quality metrics report
+        uses: actions/upload-artifact@v3
+        with:
+          name: quality-metrics-report
+          path: quality-report.md
+          retention-days: 30
 
   # Lighthouse CI Performance Testing
   lighthouse:
