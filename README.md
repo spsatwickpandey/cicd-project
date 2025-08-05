@@ -1,272 +1,123 @@
 # CI/CD Node.js API
 
-[![Build Status](https://github.com/your-username/cicd-nodejs-api/workflows/CI/CD%20Pipeline/badge.svg)](https://github.com/your-username/cicd-nodejs-api/actions)
-[![Test Coverage](https://codecov.io/gh/your-username/cicd-nodejs-api/branch/main/graph/badge.svg)](https://codecov.io/gh/your-username/cicd-nodejs-api)
-[![Code Quality](https://img.shields.io/badge/code%20quality-A%2B-brightgreen)](https://github.com/your-username/cicd-nodejs-api)
-[![Security](https://img.shields.io/badge/security-A%2B-brightgreen)](https://github.com/your-username/cicd-nodejs-api)
-[![Docker](https://img.shields.io/badge/docker-ready-blue)](https://hub.docker.com/r/your-username/cicd-nodejs-api)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-
-A complete Node.js API project with comprehensive CI/CD pipeline setup, including Express.js API, Jest testing, ESLint configuration, Docker containerization, and GitHub Actions workflows.
+A comprehensive Node.js API project with complete CI/CD pipeline setup including Docker, Cypress, Jest, and GitHub Actions.
 
 ## 🚀 Features
 
-- **Express.js API** with health check endpoints
-- **Jest unit testing** with coverage reporting
-- **ESLint configuration** with strict rules
-- **Prettier code formatting**
+- **Node.js Express API** with health, users, and products endpoints
 - **Docker containerization** with multi-stage builds
-- **GitHub Actions CI/CD pipeline**
-- **Environment-specific configurations**
-- **Comprehensive API documentation**
-- **Security best practices**
+- **Comprehensive testing** with Jest and Cypress
+- **CI/CD pipeline** with GitHub Actions
+- **Code quality** with ESLint, Prettier, and SonarCloud
+- **Security scanning** with Snyk integration
+- **Performance monitoring** with Lighthouse CI
+- **Quality gates** with strict SonarCloud standards
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
-- npm 8+
-- Docker (optional)
+- Node.js 18+
+- Docker
 - Git
 
 ## 🛠️ Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/cicd-nodejs-api.git
-   cd cicd-nodejs-api
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/spsatwickpandey/cicd-project.git
+cd cicd-project
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Install dependencies
+npm install
 
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+# Start development server
+npm run dev
+```
 
 ## 🧪 Testing
 
-### Run all tests
 ```bash
+# Run unit tests
 npm test
-```
 
-### Run tests with coverage
-```bash
+# Run tests with coverage
 npm run test:coverage
-```
 
-### Run tests in watch mode
-```bash
-npm run test:watch
-```
+# Run E2E tests with Cypress
+npm run cypress:run
 
-### Run tests for CI
-```bash
+# Run all tests
 npm run test:ci
 ```
 
-## 🔧 Development
+## 🐳 Docker
 
-### Code Quality
-
-**Linting**
 ```bash
-npm run lint
-npm run lint:fix
-```
-
-**Formatting**
-```bash
-npm run format
-npm run format:check
-```
-
-### Docker
-
-**Build image**
-```bash
+# Build Docker image
 npm run docker:build
-```
 
-**Run container**
-```bash
+# Run Docker container
 npm run docker:run
-```
 
-**Test container**
-```bash
+# Test Docker container
 npm run docker:test
 ```
 
-## 📚 API Documentation
+## 🔧 Quality Assurance
 
-### Health Check Endpoints
-
-- `GET /api/health` - Basic health status
-- `GET /api/health/detailed` - Detailed system information
-- `GET /api/health/ready` - Readiness check
-- `GET /api/health/live` - Liveness check
-
-### User Management
-
-- `GET /api/users` - Get all users
-- `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create new user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
-
-### Product Management
-
-- `GET /api/products` - Get all products (with filtering and sorting)
-- `GET /api/products/:id` - Get product by ID
-- `POST /api/products` - Create new product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
-- `GET /api/products/category/:category` - Get products by category
-
-## 🏗️ CI/CD Pipeline
-
-The project includes a comprehensive GitHub Actions workflow with the following stages:
-
-1. **Lint and Format Check** - ESLint and Prettier validation
-2. **Unit Tests** - Jest testing with coverage reporting
-3. **Security Scan** - npm audit and Snyk security scanning
-4. **Docker Build and Test** - Container build and validation
-5. **Staging Deployment** - Automatic deployment to staging (develop branch)
-6. **Production Deployment** - Manual deployment to production (main branch)
-7. **Quality Gates** - Coverage and quality thresholds
-
-### Pipeline Triggers
-
-- **Push to main** - Full pipeline with production deployment
-- **Push to develop** - Full pipeline with staging deployment
-- **Pull Request** - Lint, test, and security checks only
-
-## 🌍 Environment Configuration
-
-The project supports multiple environments with specific configurations:
-
-### Development
 ```bash
-NODE_ENV=development npm run dev
+# Lint code
+npm run lint
+
+# Format code
+npm run format
+
+# Run SonarCloud analysis
+npm run quality:check
 ```
 
-### Staging
-```bash
-NODE_ENV=staging npm start
-```
+## 📊 Quality Standards
 
-### Production
-```bash
-NODE_ENV=production npm start
-```
+This project enforces strict quality standards:
 
-## 📊 Monitoring and Health Checks
+- **0 Bugs Policy**: No bugs allowed in production code
+- **0 Vulnerabilities Policy**: No security vulnerabilities tolerated
+- **80%+ Code Coverage**: Minimum coverage requirement
+- **<3% Duplicated Lines**: Code duplication control
+- **A-Rated Maintainability**: High code maintainability standards
+- **A-Rated Reliability**: High code reliability standards
+- **A-Rated Security**: High security standards
 
-### Health Check Endpoints
+## 🚀 CI/CD Pipeline
 
-The API provides comprehensive health monitoring:
+The project includes a comprehensive CI/CD pipeline with:
 
-- **Basic Health**: `GET /api/health`
-- **Detailed Health**: `GET /api/health/detailed`
-- **Readiness**: `GET /api/health/ready`
-- **Liveness**: `GET /api/health/live`
+- **Automated Testing**: Unit, integration, and E2E tests
+- **Code Quality**: ESLint, Prettier, and SonarCloud analysis
+- **Security Scanning**: Snyk vulnerability scanning
+- **Performance Testing**: Lighthouse CI performance monitoring
+- **Docker Builds**: Automated Docker image building
+- **Quality Gates**: Strict SonarCloud quality gate enforcement
 
-### Docker Health Checks
+## 📚 Documentation
 
-The Docker container includes built-in health checks that monitor:
-- Application responsiveness
-- Memory usage
-- System resources
-
-## 🔒 Security Features
-
-- **Helmet.js** for security headers
-- **CORS** configuration
-- **Rate limiting** with express-rate-limit
-- **Input validation** and sanitization
-- **Security scanning** in CI/CD pipeline
-- **Non-root user** in Docker containers
-
-## 📁 Project Structure
-
-```
-cicd-nodejs-api/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml
-├── config/
-│   └── environments/
-│       ├── development.js
-│       ├── staging.js
-│       └── production.js
-├── src/
-│   ├── routes/
-│   │   ├── health.js
-│   │   ├── users.js
-│   │   └── products.js
-│   └── app.js
-├── tests/
-│   ├── app.test.js
-│   └── routes/
-│       ├── users.test.js
-│       └── products.test.js
-├── .eslintrc.js
-├── .prettierrc
-├── .dockerignore
-├── Dockerfile
-├── healthcheck.js
-├── package.json
-└── README.md
-```
+- [CI/CD Setup Guide](CI_CD_SETUP.md)
+- [Testing Guide](TESTING_GUIDE.md)
+- [Cypress Guide](CYPRESS_GUIDE.md)
+- [SonarCloud Setup Guide](SONARCLOUD_SETUP.md)
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Ensure all tests pass
+5. Ensure quality gate passes
+6. Submit a pull request
 
-### Development Guidelines
-
-- Follow the ESLint configuration
-- Write tests for new features
-- Maintain 80%+ test coverage
-- Use conventional commit messages
-- Update documentation as needed
-
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
-
-For support and questions:
-
-- Create an issue in the GitHub repository
-- Check the [API documentation](#api-documentation)
-- Review the [health check endpoints](#monitoring-and-health-checks)
-
-## 🔄 Version History
-
-- **v1.0.0** - Initial release with complete CI/CD pipeline
-  - Express.js API with health checks
-  - Jest testing with coverage
-  - Docker containerization
-  - GitHub Actions workflow
-  - Environment configurations
-  - Security features
-
 ---
 
-**Built with ❤️ for modern CI/CD practices** 
+**Note**: This project demonstrates enterprise-grade CI/CD practices with strict quality standards and comprehensive testing strategies. 
