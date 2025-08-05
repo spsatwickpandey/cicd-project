@@ -1,0 +1,94 @@
+{
+  "admin": {
+    "id": 1,
+    "name": "Admin User",
+    "email": "admin@example.com",
+    "password": "admin123",
+    "role": "admin",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "lastLogin": "2024-01-15T10:30:00.000Z"
+  },
+  "user": {
+    "id": 2,
+    "name": "Regular User",
+    "email": "user@example.com",
+    "password": "user123",
+    "role": "user",
+    "isActive": true,
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "lastLogin": "2024-01-14T15:45:00.000Z"
+  },
+  "inactiveUser": {
+    "id": 3,
+    "name": "Inactive User",
+    "email": "inactive@example.com",
+    "password": "inactive123",
+    "role": "user",
+    "isActive": false,
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "lastLogin": "2024-01-10T09:20:00.000Z"
+  },
+  "premiumUser": {
+    "id": 4,
+    "name": "Premium User",
+    "email": "premium@example.com",
+    "password": "premium123",
+    "role": "premium",
+    "isActive": true,
+    "createdAt": "2024-01-04T00:00:00.000Z",
+    "lastLogin": "2024-01-15T08:15:00.000Z",
+    "subscription": {
+      "plan": "premium",
+      "expiresAt": "2024-12-31T23:59:59.000Z"
+    }
+  },
+  "testUsers": [
+    {
+      "id": 101,
+      "name": "Test User 1",
+      "email": "test1@example.com",
+      "password": "test123",
+      "role": "user",
+      "isActive": true
+    },
+    {
+      "id": 102,
+      "name": "Test User 2",
+      "email": "test2@example.com",
+      "password": "test123",
+      "role": "user",
+      "isActive": true
+    },
+    {
+      "id": 103,
+      "name": "Test User 3",
+      "email": "test3@example.com",
+      "password": "test123",
+      "role": "user",
+      "isActive": true
+    }
+  ],
+  "invalidCredentials": [
+    {
+      "email": "nonexistent@example.com",
+      "password": "wrongpassword",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "email": "invalid-email",
+      "password": "password123",
+      "expectedError": "Please enter a valid email"
+    },
+    {
+      "email": "",
+      "password": "",
+      "expectedError": "Email is required"
+    },
+    {
+      "email": "user@example.com",
+      "password": "123",
+      "expectedError": "Password must be at least 6 characters"
+    }
+  ]
+} 

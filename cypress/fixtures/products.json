@@ -1,0 +1,199 @@
+{
+  "laptop": {
+    "id": 1,
+    "name": "MacBook Pro 16-inch",
+    "description": "Powerful laptop for professionals with M2 chip",
+    "price": 2499.99,
+    "category": "Electronics",
+    "subcategory": "Laptops",
+    "brand": "Apple",
+    "inStock": true,
+    "stockQuantity": 15,
+    "images": [
+      "macbook-pro-1.jpg",
+      "macbook-pro-2.jpg",
+      "macbook-pro-3.jpg"
+    ],
+    "specifications": {
+      "processor": "M2 Pro",
+      "memory": "16GB",
+      "storage": "512GB SSD",
+      "display": "16-inch Retina"
+    },
+    "tags": ["laptop", "macbook", "professional", "apple"],
+    "rating": 4.8,
+    "reviews": 125,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  },
+  "smartphone": {
+    "id": 2,
+    "name": "iPhone 15 Pro",
+    "description": "Latest iPhone with advanced camera system",
+    "price": 999.99,
+    "category": "Electronics",
+    "subcategory": "Smartphones",
+    "brand": "Apple",
+    "inStock": true,
+    "stockQuantity": 25,
+    "images": [
+      "iphone-15-pro-1.jpg",
+      "iphone-15-pro-2.jpg"
+    ],
+    "specifications": {
+      "processor": "A17 Pro",
+      "storage": "128GB",
+      "display": "6.1-inch Super Retina XDR",
+      "camera": "48MP Main"
+    },
+    "tags": ["smartphone", "iphone", "camera", "apple"],
+    "rating": 4.9,
+    "reviews": 89,
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-14T15:45:00.000Z"
+  },
+  "headphones": {
+    "id": 3,
+    "name": "Sony WH-1000XM5",
+    "description": "Premium noise-cancelling wireless headphones",
+    "price": 399.99,
+    "category": "Electronics",
+    "subcategory": "Audio",
+    "brand": "Sony",
+    "inStock": true,
+    "stockQuantity": 30,
+    "images": [
+      "sony-wh1000xm5-1.jpg",
+      "sony-wh1000xm5-2.jpg"
+    ],
+    "specifications": {
+      "type": "Over-ear",
+      "connectivity": "Bluetooth 5.2",
+      "battery": "30 hours",
+      "noiseCancellation": "Yes"
+    },
+    "tags": ["headphones", "wireless", "noise-cancelling", "sony"],
+    "rating": 4.7,
+    "reviews": 67,
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "updatedAt": "2024-01-13T12:20:00.000Z"
+  },
+  "outOfStock": {
+    "id": 4,
+    "name": "Nintendo Switch OLED",
+    "description": "Handheld gaming console with OLED display",
+    "price": 349.99,
+    "category": "Electronics",
+    "subcategory": "Gaming",
+    "brand": "Nintendo",
+    "inStock": false,
+    "stockQuantity": 0,
+    "images": [
+      "nintendo-switch-oled-1.jpg"
+    ],
+    "specifications": {
+      "display": "7-inch OLED",
+      "storage": "64GB",
+      "battery": "4.5-9 hours"
+    },
+    "tags": ["gaming", "console", "nintendo", "portable"],
+    "rating": 4.6,
+    "reviews": 45,
+    "createdAt": "2024-01-04T00:00:00.000Z",
+    "updatedAt": "2024-01-12T09:15:00.000Z"
+  },
+  "testProducts": [
+    {
+      "id": 101,
+      "name": "Test Product 1",
+      "description": "Test product description",
+      "price": 99.99,
+      "category": "Test Category",
+      "brand": "Test Brand",
+      "inStock": true,
+      "stockQuantity": 10,
+      "rating": 4.5,
+      "reviews": 10
+    },
+    {
+      "id": 102,
+      "name": "Test Product 2",
+      "description": "Another test product",
+      "price": 149.99,
+      "category": "Test Category",
+      "brand": "Test Brand",
+      "inStock": true,
+      "stockQuantity": 5,
+      "rating": 4.2,
+      "reviews": 8
+    },
+    {
+      "id": 103,
+      "name": "Test Product 3",
+      "description": "Third test product",
+      "price": 199.99,
+      "category": "Test Category",
+      "brand": "Test Brand",
+      "inStock": false,
+      "stockQuantity": 0,
+      "rating": 4.0,
+      "reviews": 5
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Electronics",
+      "description": "Electronic devices and accessories",
+      "productCount": 150,
+      "image": "electronics-category.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Clothing",
+      "description": "Fashion and apparel",
+      "productCount": 200,
+      "image": "clothing-category.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Home & Garden",
+      "description": "Home improvement and garden supplies",
+      "productCount": 100,
+      "image": "home-garden-category.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Sports",
+      "description": "Sports equipment and accessories",
+      "productCount": 75,
+      "image": "sports-category.jpg"
+    }
+  ],
+  "brands": [
+    {
+      "id": 1,
+      "name": "Apple",
+      "logo": "apple-logo.png",
+      "productCount": 25
+    },
+    {
+      "id": 2,
+      "name": "Sony",
+      "logo": "sony-logo.png",
+      "productCount": 15
+    },
+    {
+      "id": 3,
+      "name": "Nintendo",
+      "logo": "nintendo-logo.png",
+      "productCount": 8
+    },
+    {
+      "id": 4,
+      "name": "Samsung",
+      "logo": "samsung-logo.png",
+      "productCount": 20
+    }
+  ]
+} 

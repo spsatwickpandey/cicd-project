@@ -1,0 +1,87 @@
+module.exports = {
+  env: {
+    node: true,
+    es2021: true,
+    jest: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:node/recommended',
+    'plugin:jest/recommended',
+    'prettier',
+  ],
+  parserOptions: {
+    ecmaVersion: 2021,
+    sourceType: 'module',
+  },
+  plugins: ['jest', 'node'],
+  rules: {
+    // Strict rules for code quality
+    'no-console': 'warn',
+    'no-debugger': 'error',
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-undef': 'error',
+    'no-var': 'error',
+    'prefer-const': 'error',
+    'no-const-assign': 'error',
+    'no-dupe-keys': 'error',
+    'no-dupe-args': 'error',
+    'no-dupe-class-members': 'error',
+    'no-dupe-else-if': 'error',
+    'no-duplicate-imports': 'error',
+    'no-empty': 'error',
+    'no-empty-function': 'error',
+    'no-eval': 'error',
+    'no-implied-eval': 'error',
+    'no-new-func': 'error',
+    'no-obj-calls': 'error',
+    'no-redeclare': 'error',
+    'no-self-assign': 'error',
+    'no-self-compare': 'error',
+    'no-unreachable': 'error',
+    'no-unreachable-loop': 'error',
+    'no-unsafe-negation': 'error',
+    'no-unsafe-optional-chaining': 'error',
+    'use-isnan': 'error',
+    'valid-typeof': 'error',
+    
+    // Node.js specific rules
+    'node/no-unsupported-features/es-syntax': 'off',
+    'node/no-missing-import': 'off',
+    'node/no-unpublished-import': 'off',
+    'node/no-unpublished-require': 'off',
+    'node/no-extraneous-import': 'off',
+    'node/no-extraneous-require': 'off',
+    
+    // Jest specific rules
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
+    
+    // Code style rules
+    'indent': ['error', 2],
+    'linebreak-style': ['error', 'unix'],
+    'quotes': ['error', 'single'],
+    'semi': ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'object-curly-spacing': ['error', 'always'],
+    'array-bracket-spacing': ['error', 'never'],
+    'space-before-function-paren': ['error', 'never'],
+    'space-before-blocks': 'error',
+    'keyword-spacing': 'error',
+    'space-infix-ops': 'error',
+    'eol-last': 'error',
+    'no-trailing-spaces': 'error',
+    'no-multiple-empty-lines': ['error', { max: 1 }],
+  },
+  overrides: [
+    {
+      files: ['**/*.test.js', '**/*.spec.js'],
+      env: {
+        jest: true,
+      },
+    },
+  ],
+}; 
