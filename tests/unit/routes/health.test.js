@@ -1,12 +1,10 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const MockFactory = require('../../utils/mockFactories');
+// No direct imports needed - using global testUtils
 
 describe('Health Routes - Unit Tests', () => {
   let server;
 
   beforeAll(() => {
-    server = testUtils.createTestServer();
+    server = global.testUtils.createTestServer();
   });
 
   afterAll(() => {
@@ -14,9 +12,9 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('GET /api/health', () => {
-    it('should return basic health status with valid structure', async () => {
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.get('/api/health')
+    it('should return basic health status with valid structure', async() => {
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.get('/api/health'),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -30,13 +28,13 @@ describe('Health Routes - Unit Tests', () => {
       expect(response.body).toHaveProperty('environment');
     });
 
-    it('should return correct environment in test mode', async () => {
+    it('should return correct environment in test mode', async() => {
       const response = await server.get('/api/health');
 
       expect(response.body.environment).toBe('test');
     });
 
-    it('should have valid timestamp format', async () => {
+    it('should have valid timestamp format', async() => {
       const response = await server.get('/api/health');
 
       const timestamp = new Date(response.body.timestamp);
@@ -44,7 +42,7 @@ describe('Health Routes - Unit Tests', () => {
       expect(timestamp).toBeInstanceOf(Date);
     });
 
-    it('should have valid uptime value', async () => {
+    it('should have valid uptime value', async() => {
       const response = await server.get('/api/health');
 
       expect(response.body.uptime).toBeGreaterThan(0);
@@ -53,9 +51,9 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('GET /api/health/detailed', () => {
-    it('should return detailed health information', async () => {
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.get('/api/health/detailed')
+    it('should return detailed health information', async() => {
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.get('/api/health/detailed'),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -88,7 +86,7 @@ describe('Health Routes - Unit Tests', () => {
       expect(response.body.process).toHaveProperty('title');
     });
 
-    it('should have valid memory usage values', async () => {
+    it('should have valid memory usage values', async() => {
       const response = await server.get('/api/health/detailed');
 
       const memory = response.body.memory;
@@ -97,19 +95,19 @@ describe('Health Routes - Unit Tests', () => {
       expect(memory.rss).toBeGreaterThan(0);
     });
 
-    it('should have valid system information', async () => {
+    it('should have valid system information', async() => {
       const response = await server.get('/api/health/detailed');
 
       const system = response.body.system;
       expect(system.cpus).toBeGreaterThan(0);
       expect(system.freeMemory).toBeLessThanOrEqual(system.totalMemory);
       expect(Array.isArray(system.loadAverage)).toBe(true);
-      expect(system.loadAverage.length).toBe(3);
+      expect(system.loadAverage).toHaveLength(3);
     });
   });
 
   describe('GET /api/health/ready', () => {
-    it('should return readiness status', async () => {
+    it('should return readiness status', async() => {
       const response = await server.get('/api/health/ready');
 
       expect(response).toBeValidApiResponse(200);
@@ -118,7 +116,7 @@ describe('Health Routes - Unit Tests', () => {
       expect(response.body).toHaveProperty('timestamp');
     });
 
-    it('should handle readiness check failure', async () => {
+    it('should handle readiness check failure', async() => {
       // Mock a scenario where the service is not ready
       const originalHealthCheck = require('../../../src/routes/health');
       jest.spyOn(originalHealthCheck, 'checkReadiness').mockResolvedValue(false);
@@ -132,7 +130,7 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('GET /api/health/live', () => {
-    it('should return liveness status', async () => {
+    it('should return liveness status', async() => {
       const response = await server.get('/api/health/live');
 
       expect(response).toBeValidApiResponse(200);
@@ -141,7 +139,7 @@ describe('Health Routes - Unit Tests', () => {
       expect(response.body).toHaveProperty('timestamp');
     });
 
-    it('should handle liveness check failure', async () => {
+    it('should handle liveness check failure', async() => {
       // Mock a scenario where the service is not alive
       const originalHealthCheck = require('../../../src/routes/health');
       jest.spyOn(originalHealthCheck, 'checkLiveness').mockResolvedValue(false);
@@ -155,7 +153,7 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('Performance Tests', () => {
-    it('should respond within acceptable time limits', async () => {
+    it('should respond within acceptable time limits', async() => {
       const promises = [
         server.get('/api/health'),
         server.get('/api/health/detailed'),
@@ -175,10 +173,10 @@ describe('Health Routes - Unit Tests', () => {
       });
     });
 
-    it('should handle concurrent health check requests', async () => {
+    it('should handle concurrent health check requests', async() => {
       const concurrentRequests = 10;
       const promises = Array.from({ length: concurrentRequests }, () =>
-        server.get('/api/health')
+        server.get('/api/health'),
       );
 
       const start = Date.now();
@@ -197,7 +195,7 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle malformed requests gracefully', async () => {
+    it('should handle malformed requests gracefully', async() => {
       const response = await server
         .post('/api/health')
         .send({ invalid: 'data' });
@@ -205,7 +203,7 @@ describe('Health Routes - Unit Tests', () => {
       expect(response.status).toBe(404);
     });
 
-    it('should handle missing routes', async () => {
+    it('should handle missing routes', async() => {
       const response = await server.get('/api/health/nonexistent');
 
       expect(response.status).toBe(404);
@@ -214,19 +212,19 @@ describe('Health Routes - Unit Tests', () => {
   });
 
   describe('Data Validation', () => {
-    it('should return valid JSON response', async () => {
+    it('should return valid JSON response', async() => {
       const response = await server.get('/api/health');
 
       expect(response.headers['content-type']).toMatch(/application\/json/);
       expect(() => JSON.parse(JSON.stringify(response.body))).not.toThrow();
     });
 
-    it('should have consistent response structure', async () => {
+    it('should have consistent response structure', async() => {
       const endpoints = ['', '/detailed', '/ready', '/live'];
 
       for (const endpoint of endpoints) {
         const response = await server.get(`/api/health${endpoint}`);
-        
+
         expect(response.body).toHaveProperty('status');
         expect(response.body).toHaveProperty('timestamp');
         expect(typeof response.body.status).toBe('string');
@@ -234,4 +232,4 @@ describe('Health Routes - Unit Tests', () => {
       }
     });
   });
-}); 
+});

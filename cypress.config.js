@@ -106,4 +106,4 @@ module.exports = defineConfig({
 
   // Network stubbing
   experimentalNetworkStubbing: true,
-}); 
+});

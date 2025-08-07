@@ -94,7 +94,7 @@ describe('Authentication Flow', () => {
       };
 
       cy.visit('/register');
-      
+
       // Fill registration form
       cy.fillForm({
         'name-input': newUser.name,
@@ -136,7 +136,7 @@ describe('Authentication Flow', () => {
     it('should prevent duplicate email registration', () => {
       cy.get('@users').then((users) => {
         cy.visit('/register');
-        
+
         cy.fillForm({
           'name-input': 'Duplicate User',
           'email-input': users.user.email,
@@ -319,7 +319,7 @@ describe('Authentication Flow', () => {
               email: `user${i}@example.com`,
               password: 'password123',
             },
-          })
+          }),
         );
       }
 
@@ -392,4 +392,4 @@ describe('Authentication Flow', () => {
       cy.get('[data-cy=login-button]').should('have.attr', 'aria-label');
     });
   });
-}); 
+});

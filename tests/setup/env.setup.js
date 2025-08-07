@@ -37,4 +37,4 @@ process.env.HEALTH_CHECK_TIMEOUT = '3000';
 
 // External services (mocked for tests)
 process.env.PAYMENT_SERVICE_URL = 'https://mock-payment.example.com';
-process.env.EMAIL_SERVICE_URL = 'https://mock-email.example.com'; 
+process.env.EMAIL_SERVICE_URL = 'https://mock-email.example.com';

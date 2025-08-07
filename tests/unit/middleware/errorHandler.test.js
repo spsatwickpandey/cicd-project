@@ -1,4 +1,4 @@
-const request = require('supertest');
+// No direct imports needed - using global testUtils
 const app = require('../../../src/app');
 const MockFactory = require('../../utils/mockFactories');
 
@@ -6,13 +6,12 @@ describe('Error Handler Middleware - Unit Tests', () => {
   let server;
 
   beforeAll(() => {
-    server = testUtils.createTestServer();
+    server = global.testUtils.createTestServer();
   });
 
   describe('Validation Errors', () => {
-    it('should handle validation errors with proper structure', async () => {
-      const validationError = MockFactory.createValidationError('email', 'Invalid email format');
-      
+    it('should handle validation errors with proper structure', async() => {
+
       // Mock a route that throws validation error
       const testRoute = (req, res, next) => {
         const error = new Error('Validation failed');
@@ -32,7 +31,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       expect(response.body.error).toContain('Validation failed');
     });
 
-    it('should handle multiple validation errors', async () => {
+    it('should handle multiple validation errors', async() => {
       const multipleErrors = [
         MockFactory.createValidationError('email', 'Invalid email format'),
         MockFactory.createValidationError('name', 'Name is required'),
@@ -56,8 +55,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Authentication Errors', () => {
-    it('should handle unauthorized access errors', async () => {
-      const unauthorizedError = MockFactory.createUnauthorizedError();
+    it('should handle unauthorized access errors', async() => {
 
       const testRoute = (req, res, next) => {
         const error = new Error('Unauthorized access');
@@ -75,8 +73,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       expect(response.body.error).toContain('Unauthorized access');
     });
 
-    it('should handle forbidden access errors', async () => {
-      const forbiddenError = MockFactory.createForbiddenError();
+    it('should handle forbidden access errors', async() => {
 
       const testRoute = (req, res, next) => {
         const error = new Error('Access forbidden');
@@ -96,7 +93,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Database Errors', () => {
-    it('should handle database connection errors', async () => {
+    it('should handle database connection errors', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Database connection failed');
         error.name = 'DatabaseError';
@@ -113,7 +110,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       expect(response.body.error).toContain('Database connection failed');
     });
 
-    it('should handle database query errors', async () => {
+    it('should handle database query errors', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Query execution failed');
         error.name = 'DatabaseError';
@@ -133,8 +130,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Not Found Errors', () => {
-    it('should handle resource not found errors', async () => {
-      const notFoundError = MockFactory.createNotFoundError('User');
+    it('should handle resource not found errors', async() => {
 
       const testRoute = (req, res, next) => {
         const error = new Error('User not found');
@@ -155,7 +151,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Rate Limiting Errors', () => {
-    it('should handle rate limiting errors', async () => {
+    it('should handle rate limiting errors', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Too many requests');
         error.name = 'RateLimitError';
@@ -175,7 +171,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Generic Error Handling', () => {
-    it('should handle unknown errors gracefully', async () => {
+    it('should handle unknown errors gracefully', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Unknown error occurred');
         next(error);
@@ -190,7 +186,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       expect(response.body.error).toBe('Something went wrong!');
     });
 
-    it('should include error details in development mode', async () => {
+    it('should include error details in development mode', async() => {
       // Temporarily set NODE_ENV to development
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
@@ -213,7 +209,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       process.env.NODE_ENV = originalEnv;
     });
 
-    it('should handle errors without stack traces in production', async () => {
+    it('should handle errors without stack traces in production', async() => {
       // Temporarily set NODE_ENV to production
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
@@ -238,7 +234,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Error Response Structure', () => {
-    it('should maintain consistent error response structure', async () => {
+    it('should maintain consistent error response structure', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Test error');
         error.code = 'TEST_ERROR';
@@ -257,7 +253,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       expect(typeof response.body.timestamp).toBe('string');
     });
 
-    it('should include request ID in error responses', async () => {
+    it('should include request ID in error responses', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Error with request ID');
         next(error);
@@ -274,7 +270,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Performance Under Error Conditions', () => {
-    it('should handle errors within acceptable time limits', async () => {
+    it('should handle errors within acceptable time limits', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Performance test error');
         next(error);
@@ -282,15 +278,15 @@ describe('Error Handler Middleware - Unit Tests', () => {
 
       app.use('/test-error-performance', testRoute);
 
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.get('/test-error-performance')
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.get('/test-error-performance'),
       );
 
       expect(response).toHaveValidErrorResponse(500);
       expect(duration).toBeWithinResponseTime(1000);
     });
 
-    it('should handle multiple concurrent errors', async () => {
+    it('should handle multiple concurrent errors', async() => {
       const testRoute = (req, res, next) => {
         const error = new Error('Concurrent error');
         next(error);
@@ -299,7 +295,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       app.use('/test-concurrent-errors', testRoute);
 
       const promises = Array.from({ length: 5 }, () =>
-        server.get('/test-concurrent-errors')
+        server.get('/test-concurrent-errors'),
       );
 
       const start = Date.now();
@@ -317,7 +313,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
   });
 
   describe('Error Logging', () => {
-    it('should log errors appropriately', async () => {
+    it('should log errors appropriately', async() => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       const testRoute = (req, res, next) => {
@@ -335,7 +331,7 @@ describe('Error Handler Middleware - Unit Tests', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should not log sensitive information', async () => {
+    it('should not log sensitive information', async() => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       const testRoute = (req, res, next) => {
@@ -355,4 +351,4 @@ describe('Error Handler Middleware - Unit Tests', () => {
       consoleSpy.mockRestore();
     });
   });
-}); 
+});

@@ -301,4 +301,4 @@ class BasePage {
   }
 }
 
-export default BasePage; 
+export default BasePage;

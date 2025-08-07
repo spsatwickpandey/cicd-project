@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Mock user data for testing
-let users = [
+const users = [
   {
     id: 1,
     name: 'John Doe',
@@ -178,4 +178,4 @@ router.delete('/:id', (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

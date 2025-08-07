@@ -3,9 +3,9 @@ const app = require('../../src/app');
 
 describe('User Routes', () => {
   describe('GET /api/users', () => {
-    it('should return all users', async () => {
+    it('should return all users', async() => {
       const response = await request(app).get('/api/users');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(true);
@@ -17,9 +17,9 @@ describe('User Routes', () => {
   });
 
   describe('GET /api/users/:id', () => {
-    it('should return user by ID', async () => {
+    it('should return user by ID', async() => {
       const response = await request(app).get('/api/users/1');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(true);
@@ -30,9 +30,9 @@ describe('User Routes', () => {
       expect(response.body.data).toHaveProperty('role');
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const response = await request(app).get('/api/users/999');
-      
+
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(false);
@@ -42,7 +42,7 @@ describe('User Routes', () => {
   });
 
   describe('POST /api/users', () => {
-    it('should create a new user', async () => {
+    it('should create a new user', async() => {
       const newUser = {
         name: 'Test User',
         email: 'test@example.com',
@@ -52,7 +52,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .post('/api/users')
         .send(newUser);
-      
+
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(true);
@@ -63,7 +63,7 @@ describe('User Routes', () => {
       expect(response.body.data.role).toBe(newUser.role);
     });
 
-    it('should return 400 for missing required fields', async () => {
+    it('should return 400 for missing required fields', async() => {
       const invalidUser = {
         name: 'Test User',
         // Missing email
@@ -72,14 +72,14 @@ describe('User Routes', () => {
       const response = await request(app)
         .post('/api/users')
         .send(invalidUser);
-      
+
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(false);
       expect(response.body).toHaveProperty('error');
     });
 
-    it('should return 400 for duplicate email', async () => {
+    it('should return 400 for duplicate email', async() => {
       const duplicateUser = {
         name: 'Duplicate User',
         email: 'john@example.com', // Already exists
@@ -89,7 +89,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .post('/api/users')
         .send(duplicateUser);
-      
+
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(false);
@@ -99,7 +99,7 @@ describe('User Routes', () => {
   });
 
   describe('PUT /api/users/:id', () => {
-    it('should update an existing user', async () => {
+    it('should update an existing user', async() => {
       const updateData = {
         name: 'Updated Name',
         email: 'updated@example.com',
@@ -108,7 +108,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .put('/api/users/1')
         .send(updateData);
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(true);
@@ -117,7 +117,7 @@ describe('User Routes', () => {
       expect(response.body.data.email).toBe(updateData.email);
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const updateData = {
         name: 'Updated Name',
       };
@@ -125,7 +125,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .put('/api/users/999')
         .send(updateData);
-      
+
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(false);
@@ -134,9 +134,9 @@ describe('User Routes', () => {
   });
 
   describe('DELETE /api/users/:id', () => {
-    it('should delete an existing user', async () => {
+    it('should delete an existing user', async() => {
       const response = await request(app).delete('/api/users/2');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(true);
@@ -145,13 +145,13 @@ describe('User Routes', () => {
       expect(response.body.message).toBe('User deleted successfully');
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const response = await request(app).delete('/api/users/999');
-      
+
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('success');
       expect(response.body.success).toBe(false);
       expect(response.body).toHaveProperty('error');
     });
   });
-}); 
+});

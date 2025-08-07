@@ -65,7 +65,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 // Configure retry logic for flaky tests
 Cypress.Commands.add('retry', (fn, maxAttempts = 3) => {
   let lastError;
-  
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return fn();
@@ -82,16 +82,16 @@ Cypress.Commands.add('retry', (fn, maxAttempts = 3) => {
 // Configure performance monitoring
 Cypress.Commands.add('measurePerformance', (name, fn) => {
   const startTime = performance.now();
-  
+
   return fn().then(() => {
     const endTime = performance.now();
     const duration = endTime - startTime;
-    
+
     cy.log(`Performance [${name}]: ${duration.toFixed(2)}ms`);
-    
+
     // Assert performance thresholds
     expect(duration).to.be.lessThan(5000); // 5 seconds max
-    
+
     return duration;
   });
 });
@@ -172,13 +172,13 @@ Cypress.Commands.add('cleanupTestData', () => {
 beforeEach(() => {
   // Reset database state
   cy.dbReset();
-  
+
   // Clear local storage
   cy.clearLocalStorage();
-  
+
   // Clear session storage
   cy.clearSessionStorage();
-  
+
   // Seed test data if needed
   if (Cypress.env('seedData')) {
     cy.seedTestData();
@@ -194,7 +194,7 @@ afterEach(() => {
 // Configure test retries for flaky tests
 Cypress.Commands.add('retryOnFailure', (fn, maxAttempts = 3) => {
   let lastError;
-  
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return fn();
@@ -329,4 +329,4 @@ Cypress.Commands.add('assertTabletResponsive', () => {
 Cypress.Commands.add('assertDesktopResponsive', () => {
   cy.testDesktopView();
   cy.get('[data-cy=desktop-layout]').should('be.visible');
-}); 
+});

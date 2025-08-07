@@ -49,4 +49,4 @@ module.exports = {
     paymentService: process.env.PAYMENT_SERVICE_URL,
     emailService: process.env.EMAIL_SERVICE_URL,
   },
-}; 
+};

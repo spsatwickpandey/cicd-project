@@ -20,7 +20,7 @@ class MockFactory {
         id: index + 1,
         name: `User ${index + 1}`,
         email: `user${index + 1}@example.com`,
-      })
+      }),
     );
   }
 
@@ -46,7 +46,7 @@ class MockFactory {
         name: `Product ${index + 1}`,
         price: (index + 1) * 10.99,
         category: index % 2 === 0 ? 'Electronics' : 'Kitchen',
-      })
+      }),
     );
   }
 
@@ -271,4 +271,4 @@ class MockFactory {
   }
 }
 
-module.exports = MockFactory; 
+module.exports = MockFactory;
