@@ -15,6 +15,16 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['jest', 'node'],
+  ignorePatterns: [
+    'node_modules/',
+    'coverage/',
+    'test-results/',
+    'package-lock.json',
+    '*.min.js',
+    'cypress/',
+    '.github/',
+    'healthcheck.js',
+  ],
   rules: {
     // Strict rules for code quality
     'no-console': 'warn',
@@ -44,7 +54,7 @@ module.exports = {
     'no-unsafe-optional-chaining': 'error',
     'use-isnan': 'error',
     'valid-typeof': 'error',
-    
+
     // Node.js specific rules
     'node/no-unsupported-features/es-syntax': 'off',
     'node/no-missing-import': 'off',
@@ -52,14 +62,14 @@ module.exports = {
     'node/no-unpublished-require': 'off',
     'node/no-extraneous-import': 'off',
     'node/no-extraneous-require': 'off',
-    
+
     // Jest specific rules
     'jest/no-disabled-tests': 'warn',
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
-    
+
     // Code style rules
     'indent': ['error', 2],
     'linebreak-style': ['error', 'unix'],
@@ -84,4 +94,4 @@ module.exports = {
       },
     },
   ],
-}; 
+};

@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Mock product data for testing
-let products = [
+const products = [
   {
     id: 1,
     name: 'Laptop',
@@ -240,4 +240,4 @@ router.get('/category/:category', (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

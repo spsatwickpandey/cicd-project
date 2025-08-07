@@ -49,4 +49,4 @@ module.exports = {
     paymentService: process.env.PAYMENT_SERVICE_URL || 'https://staging-payment.example.com',
     emailService: process.env.EMAIL_SERVICE_URL || 'https://staging-email.example.com',
   },
-}; 
+};

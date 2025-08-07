@@ -1,5 +1,4 @@
-const request = require('supertest');
-const app = require('../../src/app');
+// No direct imports needed - using global testUtils
 const MockFactory = require('../utils/mockFactories');
 
 describe('Users API - Integration Tests', () => {
@@ -7,32 +6,32 @@ describe('Users API - Integration Tests', () => {
   let testUsers;
   let authToken;
 
-  beforeAll(async () => {
-    server = testUtils.createTestServer();
-    
+  beforeAll(async() => {
+    server = global.testUtils.createTestServer();
+
     // Seed test data
     testUsers = MockFactory.createUserList(5);
-    await testUtils.database.seedUsers(testUsers);
-    
+    await global.testUtils.database.seedUsers(testUsers);
+
     // Generate auth token
-    authToken = testUtils.auth.generateToken(testUsers[0]);
+    authToken = global.testUtils.auth.generateToken(testUsers[0]);
   });
 
-  afterAll(async () => {
+  afterAll(async() => {
     // Cleanup test data
-    await testUtils.database.clearUsers();
+    await global.testUtils.database.clearUsers();
   });
 
-  beforeEach(async () => {
+  beforeEach(async() => {
     // Reset test data before each test
     testUsers = MockFactory.createUserList(5);
-    await testUtils.database.seedUsers(testUsers);
+    await global.testUtils.database.seedUsers(testUsers);
   });
 
   describe('GET /api/users', () => {
-    it('should return all users with pagination', async () => {
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.get('/api/users')
+    it('should return all users with pagination', async() => {
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.get('/api/users'),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -45,14 +44,14 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.count).toBeGreaterThan(0);
     });
 
-    it('should handle pagination parameters', async () => {
+    it('should handle pagination parameters', async() => {
       const response = await server.get('/api/users?page=1&limit=2');
 
       expect(response).toBeValidApiResponse(200);
       expect(response.body.data.length).toBeLessThanOrEqual(2);
     });
 
-    it('should filter users by role', async () => {
+    it('should filter users by role', async() => {
       const response = await server.get('/api/users?role=admin');
 
       expect(response).toBeValidApiResponse(200);
@@ -61,7 +60,7 @@ describe('Users API - Integration Tests', () => {
       });
     });
 
-    it('should search users by name', async () => {
+    it('should search users by name', async() => {
       const searchTerm = 'User 1';
       const response = await server.get(`/api/users?search=${searchTerm}`);
 
@@ -71,7 +70,7 @@ describe('Users API - Integration Tests', () => {
       });
     });
 
-    it('should sort users by name', async () => {
+    it('should sort users by name', async() => {
       const response = await server.get('/api/users?sortBy=name&order=asc');
 
       expect(response).toBeValidApiResponse(200);
@@ -82,10 +81,10 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('GET /api/users/:id', () => {
-    it('should return user by ID', async () => {
+    it('should return user by ID', async() => {
       const userId = 1;
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.get(`/api/users/${userId}`)
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.get(`/api/users/${userId}`),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -99,14 +98,14 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data).toHaveProperty('role');
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const response = await server.get('/api/users/999');
 
       expect(response).toHaveValidErrorResponse(404);
       expect(response.body.error).toBe('User not found');
     });
 
-    it('should handle invalid user ID format', async () => {
+    it('should handle invalid user ID format', async() => {
       const response = await server.get('/api/users/invalid-id');
 
       expect(response).toHaveValidErrorResponse(400);
@@ -115,15 +114,15 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('POST /api/users', () => {
-    it('should create a new user successfully', async () => {
+    it('should create a new user successfully', async() => {
       const newUser = MockFactory.createUser({
         name: 'Integration Test User',
         email: 'integration@test.com',
         role: 'user',
       });
 
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.post('/api/users').send(newUser)
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.post('/api/users').send(newUser),
       );
 
       expect(response).toBeValidApiResponse(201);
@@ -137,7 +136,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data).toHaveProperty('createdAt');
     });
 
-    it('should validate required fields', async () => {
+    it('should validate required fields', async() => {
       const invalidUser = {
         name: 'Test User',
         // Missing email
@@ -149,7 +148,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('required');
     });
 
-    it('should validate email format', async () => {
+    it('should validate email format', async() => {
       const invalidUser = {
         name: 'Test User',
         email: 'invalid-email',
@@ -162,7 +161,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('email');
     });
 
-    it('should prevent duplicate email addresses', async () => {
+    it('should prevent duplicate email addresses', async() => {
       const existingUser = testUsers[0];
       const duplicateUser = {
         name: 'Duplicate User',
@@ -176,7 +175,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('already exists');
     });
 
-    it('should validate role values', async () => {
+    it('should validate role values', async() => {
       const invalidUser = {
         name: 'Test User',
         email: 'test@example.com',
@@ -191,15 +190,15 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('PUT /api/users/:id', () => {
-    it('should update user successfully', async () => {
+    it('should update user successfully', async() => {
       const userId = 1;
       const updateData = {
         name: 'Updated User Name',
         email: 'updated@example.com',
       };
 
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.put(`/api/users/${userId}`).send(updateData)
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.put(`/api/users/${userId}`).send(updateData),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -211,7 +210,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data).toHaveProperty('updatedAt');
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const updateData = { name: 'Updated Name' };
       const response = await server.put('/api/users/999').send(updateData);
 
@@ -219,7 +218,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toBe('User not found');
     });
 
-    it('should validate update data', async () => {
+    it('should validate update data', async() => {
       const userId = 1;
       const invalidData = {
         email: 'invalid-email-format',
@@ -231,7 +230,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('email');
     });
 
-    it('should prevent email conflicts with other users', async () => {
+    it('should prevent email conflicts with other users', async() => {
       const userId = 1;
       const otherUser = testUsers[1];
       const updateData = {
@@ -246,11 +245,11 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('DELETE /api/users/:id', () => {
-    it('should delete user successfully', async () => {
+    it('should delete user successfully', async() => {
       const userId = 1;
 
-      const { response, duration } = await testUtils.performance.measureResponseTime(
-        () => server.delete(`/api/users/${userId}`)
+      const { response, duration } = await global.testUtils.performance.measureResponseTime(
+        () => server.delete(`/api/users/${userId}`),
       );
 
       expect(response).toBeValidApiResponse(200);
@@ -262,14 +261,14 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data.id).toBe(userId);
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 404 for non-existent user', async() => {
       const response = await server.delete('/api/users/999');
 
       expect(response).toHaveValidErrorResponse(404);
       expect(response.body.error).toBe('User not found');
     });
 
-    it('should handle cascade deletion', async () => {
+    it('should handle cascade deletion', async() => {
       const userId = 1;
 
       // Delete user
@@ -282,14 +281,14 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('Authentication & Authorization', () => {
-    it('should require authentication for protected routes', async () => {
+    it('should require authentication for protected routes', async() => {
       const response = await server.get('/api/users/protected');
 
       expect(response.status).toBe(401);
       expect(response.body.error).toContain('Unauthorized');
     });
 
-    it('should allow access with valid token', async () => {
+    it('should allow access with valid token', async() => {
       const response = await server
         .get('/api/users')
         .set('Authorization', `Bearer ${authToken}`);
@@ -297,7 +296,7 @@ describe('Users API - Integration Tests', () => {
       expect(response).toBeValidApiResponse(200);
     });
 
-    it('should reject invalid tokens', async () => {
+    it('should reject invalid tokens', async() => {
       const response = await server
         .get('/api/users')
         .set('Authorization', 'Bearer invalid-token');
@@ -306,8 +305,8 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('Invalid token');
     });
 
-    it('should require admin role for certain operations', async () => {
-      const regularUserToken = testUtils.auth.generateToken({
+    it('should require admin role for certain operations', async() => {
+      const regularUserToken = global.testUtils.auth.generateToken({
         id: 2,
         role: 'user',
       });
@@ -322,10 +321,10 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('Performance & Load Testing', () => {
-    it('should handle bulk user creation', async () => {
+    it('should handle bulk user creation', async() => {
       const bulkUsers = MockFactory.createUserList(10);
       const promises = bulkUsers.map(user =>
-        server.post('/api/users').send(user)
+        server.post('/api/users').send(user),
       );
 
       const start = Date.now();
@@ -341,7 +340,7 @@ describe('Users API - Integration Tests', () => {
       expect(totalTime).toBeLessThan(5000);
     });
 
-    it('should handle concurrent user operations', async () => {
+    it('should handle concurrent user operations', async() => {
       const userId = 1;
       const operations = [
         server.get(`/api/users/${userId}`),
@@ -363,10 +362,10 @@ describe('Users API - Integration Tests', () => {
       expect(totalTime).toBeLessThan(2000);
     });
 
-    it('should maintain performance under load', async () => {
-      const loadTest = async (concurrentRequests) => {
+    it('should maintain performance under load', async() => {
+      const loadTest = async(concurrentRequests) => {
         const promises = Array.from({ length: concurrentRequests }, () =>
-          server.get('/api/users')
+          server.get('/api/users'),
         );
 
         const start = Date.now();
@@ -393,7 +392,7 @@ describe('Users API - Integration Tests', () => {
   });
 
   describe('Data Validation & Sanitization', () => {
-    it('should sanitize user input', async () => {
+    it('should sanitize user input', async() => {
       const maliciousUser = {
         name: '<script>alert("xss")</script>',
         email: 'test@example.com',
@@ -406,7 +405,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data.name).not.toContain('<script>');
     });
 
-    it('should validate email uniqueness case-insensitively', async () => {
+    it('should validate email uniqueness case-insensitively', async() => {
       const user1 = {
         name: 'User 1',
         email: 'TEST@example.com',
@@ -426,7 +425,7 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.error).toContain('already exists');
     });
 
-    it('should handle special characters in names', async () => {
+    it('should handle special characters in names', async() => {
       const specialUser = {
         name: 'José María O\'Connor-Smith',
         email: 'jose@example.com',
@@ -439,4 +438,4 @@ describe('Users API - Integration Tests', () => {
       expect(response.body.data.name).toBe(specialUser.name);
     });
   });
-}); 
+});

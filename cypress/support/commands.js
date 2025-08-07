@@ -200,23 +200,23 @@ Cypress.Commands.add('waitForApiCall', (method, url) => {
 // Data management commands
 Cypress.Commands.add('createTestData', (type, data) => {
   switch (type) {
-    case 'user':
-      return cy.apiPost('/users', data);
-    case 'product':
-      return cy.apiPost('/products', data);
-    default:
-      throw new Error(`Unknown test data type: ${type}`);
+  case 'user':
+    return cy.apiPost('/users', data);
+  case 'product':
+    return cy.apiPost('/products', data);
+  default:
+    throw new Error(`Unknown test data type: ${type}`);
   }
 });
 
 Cypress.Commands.add('cleanupTestData', (type, id) => {
   switch (type) {
-    case 'user':
-      return cy.apiDelete(`/users/${id}`);
-    case 'product':
-      return cy.apiDelete(`/products/${id}`);
-    default:
-      throw new Error(`Unknown test data type: ${type}`);
+  case 'user':
+    return cy.apiDelete(`/users/${id}`);
+  case 'product':
+    return cy.apiDelete(`/products/${id}`);
+  default:
+    throw new Error(`Unknown test data type: ${type}`);
   }
 });
 
@@ -259,10 +259,10 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 beforeEach(() => {
   // Reset database state
   cy.dbReset();
-  
+
   // Clear local storage
   cy.clearLocalStorage();
-  
+
   // Clear session storage
   cy.clearSessionStorage();
-}); 
+});

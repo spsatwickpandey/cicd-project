@@ -40,7 +40,7 @@ global.testUtils = {
 
   // Performance testing utilities
   performance: {
-    measureResponseTime: async (requestFn) => {
+    measureResponseTime: async(requestFn) => {
       const start = Date.now();
       const response = await requestFn();
       const end = Date.now();
@@ -213,14 +213,14 @@ expect.extend({
 });
 
 // Global test setup
-beforeAll(async () => {
+beforeAll(async() => {
   // Global setup before all tests
   process.env.NODE_ENV = 'test';
   process.env.PORT = '3001';
 });
 
 // Global test teardown
-afterAll(async () => {
+afterAll(async() => {
   // Global cleanup after all tests
   // Close any open connections, etc.
 });
@@ -236,4 +236,4 @@ global.console = {
   info: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
-}; 
+};

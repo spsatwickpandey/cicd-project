@@ -58,11 +58,11 @@ class LoginPage extends BasePage {
   login(email, password, rememberMe = false) {
     this.enterEmail(email);
     this.enterPassword(password);
-    
+
     if (rememberMe) {
       this.checkRememberMe();
     }
-    
+
     this.clickLoginButton();
     return this;
   }
@@ -173,12 +173,12 @@ class LoginPage extends BasePage {
   // Accessibility
   shouldBeAccessible() {
     super.shouldBeAccessible();
-    
+
     // Login-specific accessibility checks
     cy.get(this.selectors.emailInput).should('have.attr', 'aria-label', 'Email address');
     cy.get(this.selectors.passwordInput).should('have.attr', 'aria-label', 'Password');
     cy.get(this.selectors.loginButton).should('have.attr', 'aria-label', 'Sign in');
-    
+
     return this;
   }
 
@@ -196,17 +196,17 @@ class LoginPage extends BasePage {
   // Performance testing
   measureLoginPerformance() {
     const startTime = Date.now();
-    
+
     this.login(Cypress.env('userEmail'), Cypress.env('userPassword'));
-    
+
     cy.url().should('not.include', '/login').then(() => {
       const endTime = Date.now();
       const loginTime = endTime - startTime;
-      
+
       // Assert login completes within 3 seconds
       expect(loginTime).to.be.lessThan(3000);
     });
-    
+
     return this;
   }
 
@@ -237,7 +237,7 @@ class LoginPage extends BasePage {
       expect(response.body).to.have.property('token');
       expect(response.body).to.have.property('user');
     });
-    
+
     return this;
   }
 
@@ -249,21 +249,21 @@ class LoginPage extends BasePage {
       expect(response.status).to.eq(401);
       expect(response.body).to.have.property('error');
     });
-    
+
     return this;
   }
 
   // Security testing
   testPasswordVisibility() {
     this.enterPassword('testpassword');
-    
+
     // Password should be hidden by default
     cy.get(this.selectors.passwordInput).should('have.attr', 'type', 'password');
-    
+
     // Toggle password visibility
     cy.get('[data-cy=password-toggle]').click();
     cy.get(this.selectors.passwordInput).should('have.attr', 'type', 'text');
-    
+
     return this;
   }
 
@@ -273,10 +273,10 @@ class LoginPage extends BasePage {
       this.login('invalid@example.com', 'wrongpassword');
       this.shouldShowGeneralError('Invalid credentials');
     }
-    
+
     // Should show rate limiting message
     this.shouldShowGeneralError('Too many failed attempts');
-    
+
     return this;
   }
 
@@ -284,21 +284,21 @@ class LoginPage extends BasePage {
   testRememberMe() {
     this.login(Cypress.env('userEmail'), Cypress.env('userPassword'), true);
     this.shouldRedirectToDashboard();
-    
+
     // Logout and login again
     cy.logout();
     this.visit();
-    
+
     // Should be automatically logged in
     cy.url().should('not.include', '/login');
-    
+
     return this;
   }
 
   // Social login testing
   testGoogleLogin() {
     this.loginWithGoogle();
-    
+
     // Mock Google OAuth response
     cy.intercept('GET', '**/oauth/google**', {
       statusCode: 200,
@@ -311,7 +311,7 @@ class LoginPage extends BasePage {
         },
       },
     });
-    
+
     this.shouldRedirectToDashboard();
     return this;
   }
@@ -320,20 +320,20 @@ class LoginPage extends BasePage {
   testFormPersistence() {
     const email = 'test@example.com';
     const password = 'testpassword';
-    
+
     this.enterEmail(email);
     this.enterPassword(password);
-    
+
     // Navigate away and back
     cy.visit('/');
     this.visit();
-    
+
     // Form should be cleared (for security)
     cy.get(this.selectors.emailInput).should('have.value', '');
     cy.get(this.selectors.passwordInput).should('have.value', '');
-    
+
     return this;
   }
 }
 
-export default LoginPage; 
+export default LoginPage;

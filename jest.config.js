@@ -1,14 +1,14 @@
 module.exports = {
   // Test environment
   testEnvironment: 'node',
-  
+
   // Test file patterns
   testMatch: [
     '**/tests/**/*.test.js',
     '**/tests/**/*.spec.js',
     '**/__tests__/**/*.js',
   ],
-  
+
   // Coverage configuration
   collectCoverageFrom: [
     'src/**/*.js',
@@ -20,7 +20,7 @@ module.exports = {
     '!**/tests/**',
     '!**/__tests__/**',
   ],
-  
+
   // Coverage thresholds
   coverageThreshold: {
     global: {
@@ -42,7 +42,7 @@ module.exports = {
       statements: 90,
     },
   },
-  
+
   // Coverage reporters
   coverageReporters: [
     'text',
@@ -52,7 +52,7 @@ module.exports = {
     'json',
     'json-summary',
   ],
-  
+
   // Test reporters
   reporters: [
     'default',
@@ -78,44 +78,44 @@ module.exports = {
       },
     ],
   ],
-  
+
   // Setup files
   setupFilesAfterEnv: [
     '<rootDir>/tests/setup/jest.setup.js',
   ],
-  
+
   // Test timeout
   testTimeout: 10000,
-  
+
   // Verbose output
   verbose: true,
-  
+
   // Clear mocks between tests
   clearMocks: true,
-  
+
   // Restore mocks between tests
   restoreMocks: true,
-  
+
   // Reset modules between tests
   resetModules: true,
-  
+
   // Module name mapping for mocks
   moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
     '^@utils/(.*)$': '<rootDir>/tests/utils/$1',
   },
-  
+
   // Global test variables
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.json',
     },
   },
-  
+
   // Coverage directory
   coverageDirectory: 'coverage',
-  
+
   // Coverage path ignore patterns
   coveragePathIgnorePatterns: [
     '/node_modules/',
@@ -124,21 +124,21 @@ module.exports = {
     '/coverage/',
     '/test-results/',
   ],
-  
+
   // Test path ignore patterns
   testPathIgnorePatterns: [
     '/node_modules/',
     '/coverage/',
     '/test-results/',
   ],
-  
+
   // Transform ignore patterns
   transformIgnorePatterns: [
     'node_modules/(?!(express|supertest)/)',
   ],
-  
+
   // Environment variables for tests
   setupFiles: [
     '<rootDir>/tests/setup/env.setup.js',
   ],
-}; 
+};

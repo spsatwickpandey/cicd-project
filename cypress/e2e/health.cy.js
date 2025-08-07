@@ -69,4 +69,4 @@ describe('Health Check Endpoints', () => {
       expect(response.body).to.have.property('path');
     });
   });
-}); 
+});
