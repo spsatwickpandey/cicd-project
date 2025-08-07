@@ -30,7 +30,7 @@ jobs:
           cache: 'npm'
           
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache
         with:
           path: node_modules
@@ -64,7 +64,7 @@ jobs:
         run: npm run format:check
         
       - name: Upload lint results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lint-results
@@ -95,7 +95,7 @@ jobs:
         run: npm run test:ci
         
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./coverage/lcov.info
           flags: unittests
@@ -103,7 +103,7 @@ jobs:
           fail_ci_if_error: false
           
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results
@@ -139,7 +139,7 @@ jobs:
           args: --severity-threshold=high
           
       - name: Upload security results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: security-results
@@ -180,7 +180,7 @@ jobs:
           CYPRESS_BASE_URL: http://localhost:3000
           
       - name: Upload Cypress results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-results
